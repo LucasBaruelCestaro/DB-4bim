@@ -39,3 +39,4 @@ class Database:
             cls._client.close()
             cls._client = None
             cls._db = None
+

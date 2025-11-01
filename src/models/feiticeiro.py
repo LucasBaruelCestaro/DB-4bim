@@ -2,8 +2,20 @@ from typing import Optional
 
 class Feiticeiro:
     def __init__(self):
-        self.name: Optional[str] = None
-        self.level: Optional[int] = None
+        self._id: Optional[str] = None
+        self._name: Optional[str] = None
+        self._level: Optional[int] = None
+
+    @property
+    def id(self) -> Optional[str]:
+        return self._id
+    
+    @id.setter
+    def id(self, value: str) -> None:
+        if not isinstance(value, str):
+            raise TypeError("O ID do feiticeiro deve ser uma string.")
+        
+        self._id = value
 
     @property
     def name(self) -> Optional[str]:
@@ -37,8 +49,9 @@ class Feiticeiro:
 
     def to_dict(self) -> dict:
         data = {
+            "id": self._id,
             "name": self._name,
-            "level": self._level,
+            "level": self._level
         }
         return {k: v for k, v in data.items() if v is not None}
     
@@ -47,5 +60,6 @@ class Feiticeiro:
         obj = cls()
         obj._name = data.get("name")
         obj._level = data.get("level")
+        obj._id = data.get("id")
         
         return obj
