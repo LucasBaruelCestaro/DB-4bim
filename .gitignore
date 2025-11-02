@@ -3,3 +3,10 @@ __pycache__/
 **/__pycache__/
 *.pyc
 .env
+
+node_modules/
+package-lock.json
+package.json
+
+# Não precisa ignorar este arquivo de ícone, mas é a foto do meu professor então vou deixar aqui no meu caso
+icon.ico 
