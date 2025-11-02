@@ -1,5 +1,10 @@
+import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from typing import Optional, List
-from feitico import Feitico
+from models.feitico import Feitico
 import bcrypt
 
 class Grimorio:
@@ -114,12 +119,19 @@ class Grimorio:
         return visiveis
 
     def to_dict_encrypted(self, global_secret: str) -> dict:
+        feiticos_serializados = []
+        for f in self._feiticos:
+            if isinstance(f, dict):
+                feiticos_serializados.append(f)
+            else:
+                feiticos_serializados.append(f.to_encrypted_dict_by_level(global_secret))
+
         return {k: v for k, v in {
             "title": self._title,
             "author": self._author,
             "description": self._description,
             "hash_password": self._hash_password.decode("utf-8") if self._hash_password else None,
-            "feiticos": [f.to_encrypted_dict_by_level(global_secret) for f in self._feiticos]
+            "feiticos": feiticos_serializados
         }.items() if v is not None}
 
     @classmethod
@@ -133,3 +145,16 @@ class Grimorio:
         obj._feiticos = data.get("feiticos", [])
 
         return obj
+    
+if __name__ == "__main__":
+    grimorio = Grimorio()
+    grimorio.title = "Grimório dos Magos"
+    grimorio.author = "Merlin"
+    grimorio.description = "Um grimório antigo cheio de feitiços poderosos."
+
+    grimorio.set_password("segredo123")
+
+    if grimorio.check_password("segredo123"):
+        print("Grimório aberto com sucesso!")
+    else:
+        print("Senha incorreta.")
